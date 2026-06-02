@@ -1,13 +1,25 @@
 const express = require("express");
+const cors = require("cors");
+
+const port = 3000;
 const app = express();
-const testRoutes = require('./routes/myTestRoutes');
 
-app.use('/mytest', testRoutes);
+const testRoutes = require("./routes/myTestRoutes");
+const calculatorRoutes = require("./routes/calculatorRoutes");
+const userRoutes = require("./routes/userRoutes");
+const swaggerUi = require("swagger-ui-express");
+swaggerDocument = require("./swagger.json");
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-app.use('/', express.static('public'))
+app.use(express.json());
 
-app.listen(3000, () => {
+app.use(cors());
+app.use(express.static("public"));
 
-  console.log("Server running");
+app.use("/calculator", calculatorRoutes);
+app.use("/mytest", testRoutes);
+app.use("/users", userRoutes);
 
+app.listen(port, () => {
+  console.log("Server running on port:", port);
 });
